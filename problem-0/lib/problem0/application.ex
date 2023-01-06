@@ -7,9 +7,11 @@ defmodule Problem0.Application do
 
   @impl true
   def start(_type, _args) do
+    port = String.to_integer(System.get_env("PORT") || "4040")
+
     children = [
-      # Starts a worker by calling: Problem0.Worker.start_link(arg)
-      # {Problem0.Worker, arg}
+      {Task.Supervisor, name: Problem0.TaskSupervisor},
+      {Task, fn -> Problem0.start(port) end}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

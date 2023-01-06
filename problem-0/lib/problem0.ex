@@ -9,18 +9,19 @@ defmodule Problem0 do
 
   defp loop(socket) do
     {:ok, client} = :gen_tcp.accept(socket)
-    echo(client)
+    {:ok, pid} = Task.Supervisor.start_child(Problem0.TaskSupervisor, fn -> serve(client) end)
+    :ok = :gen_tcp.controlling_process(client, pid)
     loop(socket)
   end
 
-  defp echo(socket) do
+  defp serve(socket) do
     case :gen_tcp.recv(socket, 0) do
       {:ok, data} ->
         :gen_tcp.send(socket, data)
-        echo(socket)
+        serve(socket)
 
       {:error, error} ->
-        Logger.error("Error #{inspect(error)}")
+        Logger.warning("Error #{inspect(error)}")
     end
   end
 end
