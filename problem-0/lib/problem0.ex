@@ -12,14 +12,12 @@ defmodule Problem0 do
   defp loop(socket) do
     {:ok, client} = :gen_tcp.accept(socket)
 
-    {:ok, pid} =
-      Task.Supervisor.start_child(Problem0.TaskSupervisor, fn ->
-        Logger.info("Client connected")
-        serve(client)
-        :gen_tcp.close(client)
-      end)
+    Task.Supervisor.start_child(Problem0.TaskSupervisor, fn ->
+      Logger.info("Client connected")
+      serve(client)
+      :gen_tcp.close(client)
+    end)
 
-    :ok = :gen_tcp.controlling_process(client, pid)
     loop(socket)
   end
 
