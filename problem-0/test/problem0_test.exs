@@ -8,8 +8,8 @@ defmodule Problem0Test do
 
   test "echoes everything back", %{port: port} do
     {:ok, socket} = :gen_tcp.connect(~c"localhost", port, mode: :binary, active: false)
-    assert :gen_tcp.send(socket, "foo") == :ok
-    assert :gen_tcp.send(socket, "bar") == :ok
+    assert :ok = :gen_tcp.send(socket, "foo")
+    assert :ok = :gen_tcp.send(socket, "bar")
 
     :gen_tcp.shutdown(socket, :write)
     assert :gen_tcp.recv(socket, 0) == {:ok, "foobar"}
@@ -19,10 +19,10 @@ defmodule Problem0Test do
     {:ok, socket1} = :gen_tcp.connect(~c"localhost", port, mode: :binary, active: false)
     {:ok, socket2} = :gen_tcp.connect(~c"localhost", port, mode: :binary, active: false)
 
-    assert :gen_tcp.send(socket1, "foo") == :ok
-    assert :gen_tcp.send(socket2, "foo") == :ok
-    assert :gen_tcp.send(socket1, "bar") == :ok
-    assert :gen_tcp.send(socket2, "bar") == :ok
+    assert :ok = :gen_tcp.send(socket1, "foo")
+    assert :ok = :gen_tcp.send(socket2, "foo")
+    assert :ok = :gen_tcp.send(socket1, "bar")
+    assert :ok = :gen_tcp.send(socket2, "bar")
 
     :gen_tcp.shutdown(socket1, :write)
     :gen_tcp.shutdown(socket2, :write)
